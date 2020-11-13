@@ -68,6 +68,29 @@ spec:
                                 type: string
                         discoveryTimeoutSeconds:
                           type: integer
+                    ip: # {{IpDiscoveryHandler}}
+                      type: object
+                      properties:
+                        ipAddresses: # {{FilterList}}
+                          type: array
+                          items:
+                            type: string
+                        ports: # {{FilterList}}
+                          type: array
+                          items:
+                            type: string
+                        macAddresses: # {{FilterList}}
+                          type: object
+                          properties:
+                            action:
+                              type: string
+                              enum:
+                                - Include
+                                - Exclude
+                            items:
+                              type: array
+                              items:
+                                type: string
                     udev:
                       type: object
                       properties:
@@ -80,6 +103,7 @@ spec:
                   oneOf:
                     - required: ["debugEcho"]
                     - required: ["onvif"]
+                    - required: ["ip"]
                     - required: ["udev"]
                     - required: ["opcua"]
                 capacity:

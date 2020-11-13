@@ -1,6 +1,7 @@
 use super::super::{DiscoveryHandler, DiscoveryResult};
 // use super::discovery_impl::util;
 use akri_shared::akri::configuration::{FilterList, FilterType, IpDiscoveryHandlerConfig};
+use super::{IP_ADDRESS, IP_PORT};
 // use akri_shared::ip::device_info::{
 //     IpQuery, IpQueryImpl, IP_DEVICE_IP_ADDRESS_LABEL_ID,
 //     IP_DEVICE_MAC_ADDRESS_LABEL_ID, IP_DEVICE_SERVICE_URL_LABEL_ID,
@@ -142,10 +143,15 @@ impl DiscoveryHandler for IpDiscoveryHandler {
             |ip| self.discovery_handler_config.ports.iter().map(
                 |port| (ip.as_str(), port.parse::<u16>().unwrap())).collect::<Vec<(&str, u16)>>()).
             collect::<Vec<Vec<(&str, u16)>>>().concat()).iter().map(
-                |open_addr| DiscoveryResult::new(
-                open_addr.to_string().as_str(),
-                HashMap::new(), // properties
-                self.are_shared().unwrap())
+                |open_addr| {
+                    let mut properties = HashMap::new();
+                    properties.insert(IP_ADDRESS.into(), open_addr.ip().to_string());
+                    properties.insert(IP_PORT.into(), open_addr.port().to_string());
+                    DiscoveryResult::new(
+                        open_addr.to_string().as_str(),
+                        properties,
+                        self.are_shared().unwrap())
+                }
             ).collect();
         println!("Opened: {:?}.", result);
 
