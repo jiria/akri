@@ -64,6 +64,7 @@ pub trait DiscoveryHandler {
 }
 
 pub mod debug_echo;
+mod ip;
 mod onvif;
 mod opcua;
 mod udev;
@@ -83,6 +84,7 @@ fn inner_get_discovery_handler(
         ProtocolHandler::onvif(onvif) => Ok(Box::new(onvif::OnvifDiscoveryHandler::new(&onvif))),
         ProtocolHandler::udev(udev) => Ok(Box::new(udev::UdevDiscoveryHandler::new(&udev))),
         ProtocolHandler::opcua(opcua) => Ok(Box::new(opcua::OpcuaDiscoveryHandler::new(&opcua))),
+        ProtocolHandler::ip(ip) => Ok(Box::new(ip::IpDiscoveryHandler::new(&ip))),
         ProtocolHandler::debugEcho(dbg) => match query.get_env_var("ENABLE_DEBUG_ECHO") {
             Ok(_) => Ok(Box::new(debug_echo::DebugEchoDiscoveryHandler::new(dbg))),
             _ => Err(failure::format_err!("No protocol configured")),

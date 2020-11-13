@@ -119,10 +119,7 @@ match discovery_handler_config {
     ...
 ```
 
-### Update Configuration CRD
-Now we need to update the Configuration CRD so that we can pass some properties to our new protocol handler.  First, lets create our data structures.
-
-The first step is to create a DiscoveryHandler configuration struct. This struct will be used to deserialize the CRD contents and will be passed on to our NessieDiscoveryHandler. Here we are specifying that users must pass in the url for where Nessie lives. This means that Agent is not doing any discovery work besides validating a URL, but this is the scenario we are using to simplify the example. Add this code to `shared/src/akri/configuration.rs`:
+The next step is to create a DiscoveryHandler configuration struct. This struct will be used to deserialize the CRD contents and will be passed on to our NessieDiscoveryHandler. Here we are specifying that users must pass in the url for where Nessie lives. This means that Agent is not doing any discovery work besides validating a URL, but this is the scenario we are using to simplify the example. Add this code to `shared/src/akri/configuration.rs`:
 
 ```rust
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -141,7 +138,21 @@ pub enum ProtocolHandler {
 }
 ```
 
-Finally, we need to add Nessie to the CRD yaml so that Kubernetes can properly validate any one attempting to configure Akri to search for Nessie.  To do this, we need to modify `deployment/helm/crds/akri-configuration-crd.yaml`:
+
+### Validate changes
+See the [development document](./development.md) for example make commands and
+details on how to install the prerequisites needed for cross-building Akri
+components.
+
+### Update Configuration CRD
+Now we need to update the Configuration CRD so that we can pass some properties
+to our new protocol handler. The DiscoveryHandler configuration struct that we
+created earlier will expose the Configration to the agent.
+
+To support Nessie configuration, we need to add Nessie to the CRD yaml so that
+Kubernetes can properly validate any one attempting to configure Akri to search
+for Nessie.  To do this, we need to modify
+`deployment/helm/crds/akri-configuration-crd.yaml`:
 
 ```yaml
 openAPIV3Schema:

@@ -27,6 +27,7 @@ pub enum ProtocolHandler {
     udev(UdevDiscoveryHandlerConfig),
     opcua(OpcuaDiscoveryHandlerConfig),
     debugEcho(DebugEchoDiscoveryHandlerConfig),
+    ip(IpDiscoveryHandlerConfig),
 }
 
 /// This defines the types of supported filters
@@ -110,6 +111,22 @@ pub struct DebugEchoDiscoveryHandlerConfig {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub descriptions: Vec<String>,
     pub shared: bool,
+}
+
+/// This defines the ONVIF data stored in the Configuration
+/// CRD
+///
+/// The ONVIF discovery handler is structured to store a filter list for
+/// ip addresses, mac addresses, and ONVIF scopes.
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct IpDiscoveryHandlerConfig {
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub ip_addresses: Vec<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub ports: Vec<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub mac_addresses: Vec<String>,
 }
 
 /// Defines the information in the Akri Configuration CRD
